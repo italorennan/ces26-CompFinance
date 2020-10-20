@@ -6,7 +6,7 @@ export default createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
   * {
     margin: 0;
-    padding: 0;
+    padding: 1vw;
     outline: 0;
     box-sizing: border-box;
   }

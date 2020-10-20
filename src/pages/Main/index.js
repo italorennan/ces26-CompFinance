@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
-import GlobalContext from './context';
-import Login from '../../sections/Main/Login';
-import Home from '../../sections/Main/Home';
 import api from '../../services/api';
 
-function Main() {
-    const [actualSection, setActualSection] = useState(0);
+const alpha = require('alphavantage')({ key: 'qweqweqwe' });
 
-    const sections = [
-        <Login />,
-        <Home />
-    ];
+function Main() {
+    alpha.data.monthly('aapl').then(data => {
+        console.log(data);
+    });
 
     return (
-        <GlobalContext.Provider value={{ actualSection }}>
-            {sections[actualSection]}
-        </GlobalContext.Provider>
+        <h1>Esse é um teste.</h1>
     );
 }
 
