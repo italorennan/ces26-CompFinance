@@ -231,7 +231,7 @@ function Main() {
                     <br />
 
                     <h2>Valor:</h2>
-                    <h4 style={{fontSize: '20px'}}>117.51</h4>
+                    <h4 style={{fontSize: '20px'}}>{state.today.toFixed(2)}</h4>
                     <h4>USD</h4>
                     {state.delta > 0 ? 
                     <h5 style={{color: 'green'}}>+{state.delta.toFixed(2)} ({state.percentage.toFixed(2)}%) ↑</h5> :
