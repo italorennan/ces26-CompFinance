@@ -8,22 +8,6 @@ import api from '../../services/api';
 
 const alpha = require('alphavantage')({ key: 'qweqweqwe' });
 
-// Substituir por GET ao db
-const stockData = [
-    {
-        name: 'Apple',
-        symbol: 'aapl'
-    },
-    {
-        name: 'Amazon',
-        symbol: 'amzn'
-    },
-    {
-        name: 'Motorola',
-        symbol: 'msi'
-    }
-];
-
 function Main() {
     // Hook de estado usado em toda a página
     const [state, setState] = useState({stockData: [],
@@ -46,12 +30,29 @@ function Main() {
 
     // Efeito para atualizar lista de ações no banco de dados
     useEffect(() => {
-        // GET do db
+        var stockObject = {};
+        var stockList = [];
+
+        async function getStocks() {
+            await api.get('/stock/getAllStock')
+            .then(res => {stockObject = res.data.stocks})
+            .catch(error => console.log(error));
+
+            const keys = Object.keys(stockObject);
+
+            keys.map(function(key) {
+                stockList.push(stockObject[key]);
+            });
+
+            setState({...state, stockData: stockList});
+        }
+
+        getStocks();
     }, [state.control]);
 
     // Função para atualização dos dados da ação escolhida
     async function updateStock(idx) {
-        var newStock = stockData[idx];
+        var newStock = state.stockData[idx];
         var newHistorical = {'Meta Data': {'3. Last Refreshed': '0000-00-00'}};
         var timeSeries = {};
 
@@ -73,23 +74,43 @@ function Main() {
 
     // Função para deletar ação da lista
     async function deleteStock(symbol) {
-
+        await api.delete(`/stock/deleteStock?symbol=${symbol}`);
 
         setState({...state, control: !state.control});
     }
 
+    // Função para adicionar ação ao banco de dados
+    async function addStockDB() {
+        const stockData = {
+            name: state.newStockName,
+            symbol: state.newStockSymbol
+        };
+
+        await api.post('/stock/createStock',
+                JSON.stringify(stockData), { headers: {'Content-Type': 'application/json'} }
+            );
+    }
+
     // Função para adicionar nova ação à lista
     async function addStock() {
-        var testStock = {};
+        var success = false;
+
         await alpha.data.daily(state.newStockSymbol)
         .then(data => {
-            // Rota para adicionar ao db
-            
-            setState({...state, error: false, control: !state.control});
+            success = true;
         })
         .catch(err => {
-            setState({...state, error: true});
+            success = false;
         });
+
+        if (success) {
+            await addStockDB();
+            document.getElementById('inputSymbol').value = '';
+            document.getElementById('inputName').value = '';
+            setState({...state, error: false, control: !state.control, newStockName: '', newStockSymbol: ''});
+        }
+        else
+            setState({...state, error: true});
     }
 
     // Função para obter série temporal de valores da ação analisada
@@ -169,7 +190,7 @@ function Main() {
                 <h1>Ações Seguidas</h1>   
             </Header>
             <Container>
-                {stockData.map(function(stock, idx) {
+                {state.stockData.map(function(stock, idx) {
                     return <div key={stock.symbol}>
                         <h4>{stock.symbol.toUpperCase()}</h4>
                         <h3>{stock.name}</h3>
@@ -180,8 +201,8 @@ function Main() {
                 <br />
 
                 <h2>Seguir nova ação:</h2>
-                <input placeholder="Digite símbolo da ação" onChange={e => setState({...state, newStockSymbol: e.target.value.toLowerCase()})} />
-                <input placeholder="Digite nome a ser atribuído" onChange={e => setState({...state, newStockName: e.target.value})} />
+                <input id="inputSymbol" placeholder="Digite símbolo da ação" onChange={e => setState({...state, newStockSymbol: e.target.value.toLowerCase()})} />
+                <input id="inputName" placeholder="Digite nome a ser atribuído" onChange={e => setState({...state, newStockName: e.target.value})} />
                 <button onClick={() => addStock()}>Seguir</button>
 
                 {state.error ? 
@@ -196,7 +217,7 @@ function Main() {
                 <h2>Escolher ação:</h2>
                 <select onChange={e => {if (e.target.value !== '') updateStock(parseInt(e.target.value))}}>
                     <option value=''></option>
-                    {stockData.map(function(item, idx) {
+                    {state.stockData.map(function(item, idx) {
                         return <option key={item.name} value={idx}>{item.name}</option>
                     })}
                 </select>
