@@ -57,6 +57,11 @@ export const Container = styled.div`
         display: inline-block;
     }
 
+    h6 {
+        font-size: 10px;
+        color: red;
+    }
+
     select {
         margin-left: 5px;
         font-family: Montserrat;
@@ -64,9 +69,9 @@ export const Container = styled.div`
     }
 `;
 
-export const GraphSection = styled.div`
+export const CenterSection = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     margin-block-start: 0em;
     margin-block-end: 0em;
