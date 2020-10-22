@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Header, Container, GraphSection, HintDiv } from './styles';
+import React, { useState, useEffect } from 'react';
+import { Header, Container, CenterSection, HintDiv } from './styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import { XYPlot, LineMarkSeries, XAxis, YAxis, Hint } from 'react-vis';
 import 'react-vis/dist/style.css';
@@ -26,27 +25,74 @@ const stockData = [
 ];
 
 function Main() {
-    const [state, setState] = useState({stock: {name: '', symbol: ''},
+    // Hook de estado usado em toda a página
+    const [state, setState] = useState({stockData: [],
+        stock: {name: '', symbol: ''},
         historical: {'Meta Data': {'3. Last Refreshed': '0000-00-00'}},
+        today: 1,
+        delta: 1,
+        percentage: 1,
         minDate: new Date((new Date(Date.now())).getFullYear(), (new Date(Date.now())).getMonth(), (new Date(Date.now())).getDate()-1),
         maxDate: new Date((new Date(Date.now())).getFullYear(), (new Date(Date.now())).getMonth(), (new Date(Date.now())).getDate()),
         data: [],
         labels: [],
         overGraph: false,
-        timeScale: 'days'
+        timeScale: 'days',
+        newStockName: '',
+        newStockSymbol: '',
+        error: false,
+        control: false
     });
 
+    // Efeito para atualizar lista de ações no banco de dados
+    useEffect(() => {
+        // GET do db
+    }, [state.control]);
+
+    // Função para atualização dos dados da ação escolhida
     async function updateStock(idx) {
         var newStock = stockData[idx];
         var newHistorical = {'Meta Data': {'3. Last Refreshed': '0000-00-00'}};
+        var timeSeries = {};
 
-        await alpha.data.monthly(newStock.symbol).then(data => {
+        await alpha.data.daily(newStock.symbol).then(data => {
                 newHistorical = data;
+                timeSeries = data['Time Series (Daily)'];
             });
 
-        setState({...state, stock: newStock, historical: newHistorical});
+        const keys = Object.keys(timeSeries);
+
+        const today = timeSeries[keys[0]]['4. close'];
+        const yesterday = timeSeries[keys[1]]['4. close'];
+        
+        const delta = today - yesterday;
+        const percentage = (delta / yesterday) * 100;
+
+        setState({...state, stock: newStock, historical: newHistorical, today: today, delta: delta, percentage: percentage});
     }
 
+    // Função para deletar ação da lista
+    async function deleteStock(symbol) {
+
+
+        setState({...state, control: !state.control});
+    }
+
+    // Função para adicionar nova ação à lista
+    async function addStock() {
+        var testStock = {};
+        await alpha.data.daily(state.newStockSymbol)
+        .then(data => {
+            // Rota para adicionar ao db
+            
+            setState({...state, error: false, control: !state.control});
+        })
+        .catch(err => {
+            setState({...state, error: true});
+        });
+    }
+
+    // Função para obter série temporal de valores da ação analisada
     async function getData(minDate, maxDate) {
         const timeDif = maxDate - minDate;
         const limitDaily = new Date(2020, 6, 1);
@@ -58,7 +104,6 @@ function Main() {
         if (timeDif < 10368000000 && minDate > limitDaily) {
             await alpha.data.daily(state.stock.symbol).then(data => {
                 values = data['Time Series (Daily)'];
-                console.log(values);
             });
 
             const keys = Object.keys(values);
@@ -99,18 +144,20 @@ function Main() {
                 }
             });
 
-            for (var i = 0; i < newData.length; i++)
-                newData[i].x = i;
+            for (var j = 0; j < newData.length; j++)
+                newData[j].x = j;
 
             setState({...state, minDate: minDate, maxDate: maxDate, data: newData, labels: newLabels, timeScale: 'monthly'});
         }
     }
 
+    // Validação da data inicial do período escolhido
     const handleMinDate = (date: Date | null) => {
         const timeDif = state.maxDate - date;
         if (timeDif > 0) getData(date, state.maxDate);
     }
 
+    // Validação da data final do período escolhido
     const handleMaxDate = (date: Date | null) => {
         const timeDif = date - state.minDate;
         if (timeDif > 0) getData(state.minDate, date);
@@ -119,9 +166,27 @@ function Main() {
     return (
         <>
             <Header> 
-                <h1>Ações Seguidas</h1>     
+                <h1>Ações Seguidas</h1>   
             </Header>
             <Container>
+                {stockData.map(function(stock, idx) {
+                    return <div key={stock.symbol}>
+                        <h4>{stock.symbol.toUpperCase()}</h4>
+                        <h3>{stock.name}</h3>
+                        <button onClick={() => deleteStock(stock.symbol)}>Deletar</button>
+                        <br />
+                    </div>;
+                })}  
+                <br />
+
+                <h2>Seguir nova ação:</h2>
+                <input placeholder="Digite símbolo da ação" onChange={e => setState({...state, newStockSymbol: e.target.value.toLowerCase()})} />
+                <input placeholder="Digite nome a ser atribuído" onChange={e => setState({...state, newStockName: e.target.value})} />
+                <button onClick={() => addStock()}>Seguir</button>
+
+                {state.error ? 
+                <h6>A ação selecionada não está disponível.</h6>
+                : <></>}
             </Container>
 
             <Header>
@@ -147,28 +212,31 @@ function Main() {
                     <h2>Valor:</h2>
                     <h4 style={{fontSize: '20px'}}>117.51</h4>
                     <h4>USD</h4>
-                    <h5 style={{color: 'green'}}>+1.53 (1.32%) ↑</h5>
-                    {/*<h5 style={{color: 'red}}>-1.53 (1.32%) ↓</h5>*/}
+                    {state.delta > 0 ? 
+                    <h5 style={{color: 'green'}}>+{state.delta.toFixed(2)} ({state.percentage.toFixed(2)}%) ↑</h5> :
+                    <h5 style={{color: 'red'}}>{state.delta.toFixed(2)} ({state.percentage.toFixed(2)}%) ↓</h5>}
                     <br />
 
                     <h2>Período de acompanhamento:</h2>
                     <br />
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                            variant="inline"
-                            label="Data inicial"
-                            value={state.minDate}
-                            onChange={handleMinDate} disableFuture minDate={new Date(2000, 1, 1)}
-                        />
-                        <KeyboardDatePicker
-                            variant="inline"
-                            label="Data final"
-                            value={state.maxDate}
-                            onChange={handleMaxDate} disableFuture minDate={state.minDate}
-                        />
-                    </MuiPickersUtilsProvider>
+                    <CenterSection>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                variant="inline"
+                                label="Data inicial"
+                                value={state.minDate} format="dd/MM/yyyy"
+                                onChange={handleMinDate} disableFuture minDate={new Date(2000, 1, 1)}
+                            />
+                            <KeyboardDatePicker
+                                variant="inline"
+                                label="Data final"
+                                value={state.maxDate} format="dd/MM/yyyy"
+                                onChange={handleMaxDate} disableFuture minDate={state.minDate}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </CenterSection>
 
-                    <GraphSection>
+                    <CenterSection>
                         <XYPlot 
                             width={700} height={500} margin={{ left: 60, right: 60, bottom: 100 }}
                         >
@@ -199,7 +267,7 @@ function Main() {
                                 </HintDiv>
                             </Hint>}
                         </XYPlot>
-                    </GraphSection>
+                    </CenterSection>
                 </>}
             </Container>
         </>
