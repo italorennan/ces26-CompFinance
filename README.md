@@ -1,68 +1,55 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## [Front-end] CES-26: Projeto 1º Bimestre - CompFinance
+Projeto front-end para visualizaçao do histórico de açoes cadastradas em um banco de dados.
 
-## Available Scripts
+### Tecnologias
+Projeto desenvolvido com [React](https://reactjs.org) e com as seguintes dependências:
+ - [Styled-components](https://styled-components.com/)
+ - [React-Router-DOM](https://reacttraining.com/react-router/)
+ - [Axios](https://github.com/axios/axios)
+ - [Material-UI](https://material-ui.com/)
 
-In the project directory, you can run:
+### Estrutura de pastas 
+```js
+- public
+- src
+    |- sections
+    |- pages
+    |- styles
+    |- services
+```
 
-### `yarn start`
+### Sobre o back-end
+Back-end desenvolvido em [Node.js](https://nodejs.org/en/) com framework web [express](https://expressjs.com/pt-br/). É necessário ter o [Docker](docker.com) instalado em sua máquina - mais informações no [repositório](https://github.com/lulis123/ces26-back-end).
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Iniciando com o projeto
+Verificar se existe [Node.js](https://nodejs.org/en/), [npm](https://www.npmjs.com/) e [yarn](https://yarnpkg.com/) instalados na sua máquina antes de iniciar com o projeto.
+```bash
+# Clone o repositório front-end
+$ git clone https://github.com/italorennan/ces26-compfinance-front
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+# Entre no repositório
+$ cd ces26-compfinance-front
 
-### `yarn test`
+# Instale as dependências que estão presentes no arquivo 'package.json'
+$ npm install
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Clone o repositório back-end
+$ git clone https://github.com/lulis123/ces26-back-end
 
-### `yarn build`
+# Depois de seguir as instruções de 'getting started' do back-end
+# Entre no repositório
+$ cd ces26-back-end
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Instale as dependências que estão presentes no arquivo 'package.json'
+$ npm install
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+# Rode o projeto front-end
+$ sudo npm start
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Rode o projeto back-end
+$ sudo npm start
+```
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### Padrões de desenvolvimento do projeto
+Criar uma nova branch `git checkout -b feat/nome-da-feature` sempre que for desenvolver uma nova funcionalidade.
+> Nunca commitar na branch master.
