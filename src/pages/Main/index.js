@@ -234,8 +234,8 @@ function Main() {
                     <h4 style={{fontSize: '20px'}}>{state.today.toFixed(2)}</h4>
                     <h4>USD</h4>
                     {state.delta > 0 ? 
-                    <h5 style={{color: 'green'}}>+{state.delta.toFixed(2)} ({state.percentage.toFixed(2)}%) ↑</h5> :
-                    <h5 style={{color: 'red'}}>{state.delta.toFixed(2)} ({state.percentage.toFixed(2)}%) ↓</h5>}
+                    <h5 style={{color: 'green'}}>+{state.delta} ({state.percentage}%) ↑</h5> :
+                    <h5 style={{color: 'red'}}>{state.delta} ({state.percentage}%) ↓</h5>}
                     <br />
 
                     <h2>Período de acompanhamento:</h2>
