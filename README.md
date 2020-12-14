@@ -18,6 +18,13 @@ Projeto desenvolvido com [React](https://reactjs.org) e com as seguintes depend�
     |- services
 ```
 
+### Deploy da API
+O deploy da API foi feito utilizando o [heroku](https://dashboard.heroku.com/) <br/>
+O deploy do banco de dados foi feito utilizando o [Mongo Atlas](https://www.mongodb.com/cloud/atlas), plataforma construída em conjunto entre a Mongo e a AWS. <br/>
+A API está disponível no link: https://cryptic-eyrie-86960.herokuapp.com/ <br/>
+A princípio, para facilitar o acesso e teste da API, não estamos fazendo nenhuma restrição nos resquest. Em uma versão final deveríamos restringir o acess às rotas apenas à aplicação front-end da aplicação.
+
+
 ### Sobre o back-end
 Back-end desenvolvido em [Node.js](https://nodejs.org/en/) com framework web [express](https://expressjs.com/pt-br/). É necessário ter o [Docker](docker.com) instalado em sua máquina - mais informações no [repositório](https://github.com/lulis123/ces26-back-end).
 
