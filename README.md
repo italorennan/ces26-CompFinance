@@ -1,4 +1,4 @@
-## [Front-end] CES-26: Projeto 1º Bimestre - CompFinance
+## [Front-end] CES-26: Projeto - CompFinance
 Projeto front-end para visualizaçao do histórico de açoes cadastradas em um banco de dados.
 
 ### Tecnologias
