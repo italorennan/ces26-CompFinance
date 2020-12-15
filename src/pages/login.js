@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container } from './styles';
-import api from '../../services/api';
+import api from '../services/api';
+import Context from './context';
 
 function Login() {
     // Hook de estado para variáveis de login
@@ -8,6 +9,8 @@ function Login() {
         username: '',
         password: ''
     });
+
+    const { actualSection, setActualSection } = useContext(Context);
 
     // Função para enviar dados de login ao back
     async function enter() {
@@ -19,7 +22,9 @@ function Login() {
         // Chamar rota para envio dos dados
         await api.post('/login',
             JSON.stringify(data), { headers: {'Content-Type': 'application/json'} }
-        );
+        ).then(response => {
+            if (response.ok) setActualSection(1);
+        }).catch(error => console.log(error));
     }
 
     return (
