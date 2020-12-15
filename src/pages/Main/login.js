@@ -8,18 +8,28 @@ function Login() {
         password: ''
     });
 
+    function handleChangePassword(password){
+        
+    }
+
+    function handleChangeUser(user){
+
+    }
+
+    function handleLoginSubmit(){
+
+    }
+
     return (
         <>
             <Container>
                 <h1>Login</h1>
 
-                <form action="https://stormy-garden-64077.herokuapp.com/login" method="post">
-                    <h2>Usuário:</h2>
-                    <input type="text" name="username"/>
-                    <h2>Senha:</h2>
-                    <input type="password" name="password" required/>
-                    <input class="submit-btn" type="submit" value="Submit" required/>
-                </form>
+                <h2>Usuário:</h2>
+                <input type="text" name="user"onChange={e=> handleChangeUser(e.target.value)} required/>
+                <h2>Senha:</h2>
+                <input type="password" name="password" onChange={e=>handleChangePassword(e.target.value)} required/>
+                <input type="submit" value="Submit" onClick={e=>{e.preventDefault(); handleLoginSubmit();}}required/>
             </Container>
         </>
     );
