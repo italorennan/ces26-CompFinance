@@ -4,7 +4,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import DateFnsUtils from '@date-io/date-fns';
 import { XYPlot, LineMarkSeries, XAxis, YAxis, Hint } from 'react-vis';
 import 'react-vis/dist/style.css';
-import api from '../../services/api';
+import api from '../services/api';
 
 const alpha = require('alphavantage')({ key: 'qweqweqwe' });
 
