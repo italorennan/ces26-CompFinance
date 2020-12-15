@@ -13,7 +13,7 @@ function Login() {
             <Container>
                 <h1>Login</h1>
 
-                <form action="https://ces26-back.herokuapp.com/login" method="post">
+                <form action="https://stormy-garden-64077.herokuapp.com/login" method="post">
                     <h2>Usuário:</h2>
                     <input type="text" name="username"/>
                     <h2>Senha:</h2>
