@@ -201,8 +201,8 @@ function Main() {
                 <br />
 
                 <h2>Seguir nova ação:</h2>
-                <input id="inputSymbol" placeholder="Digite símbolo da ação" onChange={e => setState({...state, newStockSymbol: e.target.value.toLowerCase()})} />
-                <input id="inputName" placeholder="Digite nome a ser atribuído" onChange={e => setState({...state, newStockName: e.target.value})} />
+                <input id="inputSymbol" placeholder="Digite símbolo da ação" onChange={e => setState({...state, newStockSymbol: e.target.value.toLowerCase().replace('<', '\u003c').replace('>', '\u003e')})} />
+                <input id="inputName" placeholder="Digite nome a ser atribuído" onChange={e => setState({...state, newStockName: e.target.value.replace('<', '\u003c').replace('>', '\u003e')})} />
                 <button onClick={() => addStock()}>Seguir</button>
 
                 {state.error ? 
