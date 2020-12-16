@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container } from './styles';
 import api from '../services/api';
 import Context from './context';
