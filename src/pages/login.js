@@ -23,7 +23,10 @@ function Login() {
         await api.post('/login',
             JSON.stringify(data), { headers: {'Content-Type': 'application/json'} }
         ).then(response => {
-            if (response.ok) setActualSection(1);
+            if (response.status === 200) {setActualSection(1);
+            console.log("ENTROU");}
+            console.log(response);
+            console.log("A");
         }).catch(error => console.log(error));
     }
 
